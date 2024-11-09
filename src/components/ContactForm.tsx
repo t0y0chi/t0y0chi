@@ -12,16 +12,14 @@ const ContactForm: React.FC = () => {
     const formData = new FormData(form);
 
     try {
-      const response = await fetch('/', {
+      const response = await fetch(form.action, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(formData as any).toString(),
+        body: formData,
       });
 
       if (response.ok) {
         setStatus('sent');
         form.reset();
-        // Reset form status after 3 seconds
         setTimeout(() => setStatus('idle'), 3000);
       } else {
         throw new Error('Form submission failed');
@@ -29,7 +27,6 @@ const ContactForm: React.FC = () => {
     } catch (error) {
       console.error('Error submitting form:', error);
       setStatus('error');
-      // Reset error status after 3 seconds
       setTimeout(() => setStatus('idle'), 3000);
     }
   };
@@ -39,10 +36,12 @@ const ContactForm: React.FC = () => {
       name="contact"
       method="POST"
       data-netlify="true"
+      data-netlify-honeypot="bot-field"
       className="space-y-6 max-w-xl mx-auto"
       onSubmit={handleSubmit}
     >
       <input type="hidden" name="form-name" value="contact" />
+      <input type="hidden" name="bot-field" />
       
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-gray-300">

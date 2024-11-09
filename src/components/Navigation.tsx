@@ -13,9 +13,9 @@ const Navigation: React.FC = () => {
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-4">
               {[
+                { name: 'About', icon: User },
                 { name: 'Skills', icon: Cpu },
                 { name: 'Projects', icon: Code2 },
-                { name: 'About', icon: User },
                 { name: 'Contact', icon: Mail },
               ].map(({ name, icon: Icon }) => (
                 <a

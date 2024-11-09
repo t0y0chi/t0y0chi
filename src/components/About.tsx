@@ -41,7 +41,7 @@ const About: React.FC = () => {
         className="relative aspect-square"
       >
         <img
-          src="profile.jpg"
+          src="/profile.jpg"
           alt="profile"
           className="rounded-lg object-cover w-full h-full"
         />

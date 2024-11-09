@@ -124,7 +124,7 @@ function App() {
       <section id="contact" className="py-20 px-4 bg-black/50">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold mb-12 text-green-500">/contact</h2>
-          <ContactForm />
+          <div>toyokazu.miura@pico-inc.fun</div>
         </div>
       </section>
 

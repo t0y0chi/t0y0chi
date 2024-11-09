@@ -4,17 +4,43 @@ import { Send } from 'lucide-react';
 const ContactForm: React.FC = () => {
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus('sending');
+
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData as any).toString(),
+      });
+
+      if (response.ok) {
+        setStatus('sent');
+        form.reset();
+        // Reset form status after 3 seconds
+        setTimeout(() => setStatus('idle'), 3000);
+      } else {
+        throw new Error('Form submission failed');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setStatus('error');
+      // Reset error status after 3 seconds
+      setTimeout(() => setStatus('idle'), 3000);
+    }
+  };
+
   return (
     <form
       name="contact"
       method="POST"
       data-netlify="true"
       className="space-y-6 max-w-xl mx-auto"
-      onSubmit={(e) => {
-        e.preventDefault();
-        setStatus('sending');
-        // Netlify handles the form submission
-      }}
+      onSubmit={handleSubmit}
     >
       <input type="hidden" name="form-name" value="contact" />
       
@@ -63,8 +89,22 @@ const ContactForm: React.FC = () => {
         className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-black bg-green-500 hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <Send className="h-5 w-5 mr-2" />
-        {status === 'sending' ? 'Sending...' : 'Send Message'}
+        {status === 'sending' && 'Sending...'}
+        {status === 'sent' && 'Message Sent!'}
+        {status === 'error' && 'Error Sending'}
+        {status === 'idle' && 'Send Message'}
       </button>
+
+      {status === 'error' && (
+        <p className="text-red-500 text-sm text-center">
+          Failed to send message. Please try again.
+        </p>
+      )}
+      {status === 'sent' && (
+        <p className="text-green-500 text-sm text-center">
+          Message sent successfully!
+        </p>
+      )}
     </form>
   );
 };
